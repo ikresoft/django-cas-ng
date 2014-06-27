@@ -71,6 +71,10 @@ def login(request, next_page=None, required=False):
     if not next_page:
         next_page = _redirect_url(request)
     if request.user.is_authenticated():
+        try:
+            username = request.user.username
+        except AttributeError:
+            username = request.user.get_username()
         message = "You are logged in as %s." % request.user.username
         messages.success(request, message)
         return HttpResponseRedirect(next_page)
@@ -81,6 +85,10 @@ def login(request, next_page=None, required=False):
         user = auth.authenticate(ticket=ticket, service=service, request=request)
         if user is not None:
             auth.login(request, user)
+            try:
+                username = user.username
+            except AttributeError:
+                username = user.get_username()
             name = user.first_name or user.username
             message = "Login succeeded. Welcome, %s." % name
             messages.success(request, message)
