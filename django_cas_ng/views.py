@@ -75,7 +75,7 @@ def login(request, next_page=None, required=False):
             username = request.user.username
         except AttributeError:
             username = request.user.get_username()
-        message = "You are logged in as %s." % request.user.username
+        message = "You are logged in as %s." % username
         messages.success(request, message)
         return HttpResponseRedirect(next_page)
     ticket = request.GET.get('ticket')
@@ -89,7 +89,7 @@ def login(request, next_page=None, required=False):
                 username = user.username
             except AttributeError:
                 username = user.get_username()
-            name = user.first_name or user.username
+            name = user.first_name or username
             message = "Login succeeded. Welcome, %s." % name
             messages.success(request, message)
             return HttpResponseRedirect(next_page)
